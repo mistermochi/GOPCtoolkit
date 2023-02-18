@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>GOPC toolkit</title>
+  <meta name="viewport" content="width=device-width">
+  <script> // jsondisplayer
+    var module,window,define,renderjson=function(){var n=function(){for(var n=[];arguments.length;)n.push(t(r(Array.prototype.shift.call(arguments)),e(Array.prototype.shift.call(arguments))));return n},t=function(){for(var n=Array.prototype.shift.call(arguments),e=0;e<arguments.length;e++)arguments[e].constructor==Array?t.apply(this,[n].concat(arguments[e])):n.appendChild(arguments[e]);return n},e=function(n){return document.createTextNode(n)},r=function(n){var t=document.createElement("span");return n&&(t.className=n),t},o=function(n,t,r){var o=document.createElement("a");return t&&(o.className=t),o.appendChild(e(n)),o.href="#",o.onclick=function(n){return r(),n&&n.stopPropagation(),!1},o};function s(l,i,a,c,u){var p=a?"":i,f=function(s,l,i,a,f){var y,_=r(a),d=function(){y||t(_.parentNode,y=function(n,t){return n.insertBefore(t,n.firstChild),n}(f(),o(u.hide,"disclosure",(function(){y.style.display="none",_.style.display="inline"})))),y.style.display="inline",_.style.display="none"};t(_,o(u.show,"disclosure",d),n(a+" syntax",s),o(l,null,d),n(a+" syntax",i));var g=t(r(),e(p.slice(0,-1)),_);return c>0&&"string"!=a&&d(),g};return null===l?n(null,p,"keyword","null"):void 0===l?n(null,p,"keyword","undefined"):"string"==typeof l&&l.length>u.max_string_length?f('"',l.substr(0,u.max_string_length)+" ...",'"',"string",(function(){return t(r("string"),n(null,p,"string",JSON.stringify(l)))})):"object"!=typeof l||[Number,String,Boolean,Date].indexOf(l.constructor)>=0?n(null,p,typeof l,JSON.stringify(l)):l.constructor==Array?0==l.length?n(null,p,"array syntax","[]"):f("[",u.collapse_msg(l.length),"]","array",(function(){for(var o=t(r("array"),n("array syntax","[",null,"\n")),a=0;a<l.length;a++)t(o,s(u.replacer.call(l,a,l[a]),i+"    ",!1,c-1,u),a!=l.length-1?n("syntax",","):[],e("\n"));return t(o,n(null,i,"array syntax","]")),o})):function(n,t){var e=t||Object.keys(n);for(var r in e)if(Object.hasOwnProperty.call(n,e[r]))return!1;return!0}(l,u.property_list)?n(null,p,"object syntax","{}"):f("{",u.collapse_msg(Object.keys(l).length),"}","object",(function(){var o=t(r("object"),n("object syntax","{",null,"\n"));for(var a in l)var p=a;var f=u.property_list||Object.keys(l);for(var y in u.sort_objects&&(f=f.sort()),f){(a=f[y])in l&&t(o,n(null,i+"    ","key",'"'+a+'"',"object syntax",": "),s(u.replacer.call(l,a,l[a]),i+"    ",!0,c-1,u),a!=p?n("syntax",","):[],e("\n"))}return t(o,n(null,i,"object syntax","}")),o}))}var l=function n(e){var r=new Object(n.options);r.replacer="function"==typeof r.replacer?r.replacer:function(n,t){return t};var o=t(document.createElement("pre"),s(e,"",!1,r.show_to_level,r));return o.className="renderjson",o};return l.set_icons=function(n,t){return l.options.show=n,l.options.hide=t,l},l.set_show_to_level=function(n){return l.options.show_to_level="string"==typeof n&&"all"===n.toLowerCase()?Number.MAX_VALUE:n,l},l.set_max_string_length=function(n){return l.options.max_string_length="string"==typeof n&&"none"===n.toLowerCase()?Number.MAX_VALUE:n,l},l.set_sort_objects=function(n){return l.options.sort_objects=n,l},l.set_replacer=function(n){return l.options.replacer=n,l},l.set_collapse_msg=function(n){return l.options.collapse_msg=n,l},l.set_property_list=function(n){return l.options.property_list=n,l},l.set_show_by_default=function(n){return l.options.show_to_level=n?Number.MAX_VALUE:0,l},l.options={},l.set_icons("⊕","⊖"),l.set_show_by_default(!1),l.set_sort_objects(!1),l.set_max_string_length("none"),l.set_replacer(void 0),l.set_property_list(void 0),l.set_collapse_msg((function(n){return n+" item"+(1==n?"":"s")})),l}();define?define({renderjson:renderjson}):(module||{}).exports=(window||{}).renderjson=renderjson;
+  </script>
+  <style>
+    * {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0 auto;
+      font-family: consolas, monospace, sans-serif;
+      font-size: 14px;
+      line-height: 20px;
+      color: #333;
+    }
+
+    header {
+      padding: 0.5em;
+      background-color: #fff;
+      text-align: center;
+    }
+
+    footer {
+      font-size: 0.875em;
+      text-align: center;
+      color: #666;
+    }
+
+    h1,
+    label[for="input"],
+    label[for="output"] {
+      margin: 0;
+      font-size: 1em;
+      font-weight: 700;
+      letter-spacing: 0.0625em;
+      text-transform: uppercase;
+    }
+
+    label[for="input"],
+    label[for="output"] {
+      font-weight: 400;
+    }
+
+    .row:before,
+    .row:after {
+      content: " ";
+      display: table;
+    }
+
+    .row:after {
+      clear: both;
+    }
+
+    .row {
+      *zoom: 1;
+    }
+
+    .col,
+    .form-group {
+      padding: 0 0.5em;
+    }
+
+    @media (min-width: 36em) {
+      .col {
+        float: left;
+        width: 50%;
+      }
+    }
+    
+    .box > textarea, #highlight, #input {
+      width: 100%;
+      height: 36em;
+      margin: 0;
+      padding: 0.5em;
+      border: 1px solid;
+      overflow-y: scroll;
+      background-color: #fff;
+      font-family: consolas, monospace, sans-serif;
+      font-size: 14px;
+      line-height: 20px;
+      color: inherit;
+      resize: none;
+      white-space: pre-wrap;
+      word-break: break-all;
+      overflow-wrap: anywhere;
+      -ms-overflow-style: none;  /* IE and Edge */
+    }
+
+    #input {
+      top: 0;
+      left: 0;
+      position: absolute;
+      z-index: 1;
+      color: transparent;
+      background: transparent;
+      caret-color: white;
+    }
+
+    #highlight {
+      margin: 0;
+      padding-bottom: 0;
+      top: 0;
+      left: 0;
+      position: absolute;
+      z-index: 0;
+      background-color: #ddd;
+      color: #555;
+    }
+
+    #highlight:after {
+      content: "";
+      height: 0.5em;
+      display: block;
+    }
+
+    #overlaybox {
+      position: relative;
+    }
+
+    select {
+      display: block;
+      width: 100%;
+      font-size: inherit;
+    }
+
+    .form-group {
+      display: inline-block;
+    }
+
+    .form-group label {
+      font-size: 0.875em;
+    }
+
+    .renderjson a              { text-decoration: none; }
+    .renderjson .disclosure    { color: crimson; }
+    .renderjson .syntax        { color: grey; }
+    .renderjson .string        { color: red; }
+    .renderjson .number        { color: blue; }
+    .renderjson .boolean       { color: blueviolet; }
+    .renderjson .key           { color: black; }
+    .renderjson .keyword       { color: coral; }
+    .renderjson .object.syntax { color: lightseagreen; }
+    .renderjson .array.syntax  { color: green; }
+
+    .tooltip {
+      position: relative;
+      display: inline-block;
+    }
+
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 140px;
+      background-color: #555;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px;
+      position: absolute;
+      z-index: 1;
+      bottom: 150%;
+      left: 50%;
+      margin-left: -75px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .tooltip .tooltiptext::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #555 transparent transparent transparent;
+    }
+
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body onbeforeunload="return onQuit()">
+  <header>
+    <h1>GOPC Toolkit</h1>
+  </header>
+  <div class="row">
+    <form id="options">
+      <div class="form-group">
+        <label for="rename">Rename words</label>
+        <select name="rename" id="rename">
+          <option value="all">All</option>
+          <option value="none">None</option>
+        </select>
+      </div>
+
+
+      <div class="form-group">
+        <label for="units">Remove units</label>
+        <select name="units" id="units">
+          <option value="all">All</option>
+          <option value="none">None</option>
+        </select>
+      </div>
+
+
+      <div class="form-group">
+        <label for="units">Simplify normal</label>
+        <select name="normalize" id="normalize">
+          <option value="all">All</option>
+          <option value="none">None</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="reorder">Reorder</label>
+        <select name="reorder" id="reorder">
+          <option value="on-with-sort">On, Sort by date</option>
+          <option value="on-no-sort">On, Do not sort by date</option>
+          <option value="off">Off</option>
+        </select>
+      </div>
+
+    </form>
+  </div>
+  <div class="row">
+    <div class="col">
+      <label for="input">INPUT</label>
+      <div id="overlaybox" class="box">
+        <textarea id="input" spellcheck="false" autofocus oninput="scrollSync(this);" onscroll="scrollSync(this);">****</textarea>
+        <div id="highlight" aria-hidden="true"></div>
+      </div>
+    </div>
+    <div class="col box">
+      <label for="output">OUTPUT</label>
+      <textarea readonly cols="100" rows=10 id="output"></textarea>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col">
+      Statistics
+      <ul>
+        <li>Last A1c: <span id="lastA1c"></span></li>
+        <li>Latest LDL: <span id="lastLDL"></span></li>
+        <li>Latest eGFR: <span id="lastEGFR"></span></li>
+      </ul>
+    </div>
+    <div class = "col">
+      <div id="container"></div>
+      
+      <div class="form-group">
+        <textarea type="text" id="historyBox" rows="2"></textarea>
+        <div class="tooltip">
+          <button onclick="copyHx()" onmouseout="resetTooltip()">
+            <span class="tooltiptext" id="myTooltip">Copy to clipboard</span>
+            Copy Hx
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer>(c) Mistermochi</footer>
+  <script>
+    
+    if (!Array.prototype.find) { // polyfill
+      Array.prototype.find = function (callback) {
+        return callback && (this.filter(callback) || [])[0];
+      };
+    }
+
+    const ixNames = {
+        cst: ["Sputum", "MSU", "EMU", "CSU", "Stool", "Nail", "HVS", "Swab"],
+        img: ["CT", "CTA", "CTB", "CTCA", "MRI", "MRA", "USG", "XR", "Xray", "X-ray", "X ray", "CXR", "KUB", "AXR", "PET", "PETCT", "DEXA"],
+        bld: [
+          "AM cortisol", "Cortisol", "ACTH", "TSH", "fT4", "T4", "fT3", "T3", "TFT",
+          "HbA1c", "A1c", "FG", "FBS", "TC", "HDL", "LDL", "Chol", "TG", "Lipid", "OGTT",
+          "LFT", "ALT", "ALP", "AFP", "TB", "DB", "Bili", "Bilirubin", "TP", "Albumin", "HBsAg", "anti-HCV", "HBV DNA", "HBVDNA",
+          "RFT", "LRFT", "RLFT", "Cr", "eGFR", "Na", "K", "Ca", "PO4", "CaPO4", 
+          "Urate", "UA", "Ck", "LDH",
+          "Hb", "CBC", "CBP", "WCC", "WBC", "PLT", "MCV", "MCH", "Retic", "HbP", "FOB", "Ferritin", "Fe", "Iron", "B12", "Folate", "Vit B", "INR", "Clotting",
+          "ESR", "CRP", "RF", "ANA", "anti-dsDNA", "ENA",
+          "ACR", "uACR", "uPCR", "PCR",
+          "Syphilis", "VDRL", 
+          "SPE", "BJP", "Paraprotein",
+          "CEA", "CA125", "EBV VCA",
+        ],
+        ecg: ["ECG", "Echo", "Echocardiogram", "Spirometry", "ABPM", "MRAM", "DMCS","RHT","RAMP","RHTA", "RDMA"],
+      }
+    const datepattern = /([0-9]+[\/-]){1,2}[0-9]{2,}(?!\.)/g
+    
+    ; (function () {
+      var input = document.getElementById('input')
+      var output = document.getElementById('output')
+      var optionsForm = document.getElementById('options')
+      var lastA1c = document.getElementById('lastA1c')
+      var lastLDL = document.getElementById('lastLDL')
+      var lastEGFR = document.getElementById('lastEGFR')
+      var jsonBox = document.getElementById('container')
+      var historyBox = document.getElementById("historyBox");
+
+      input.addEventListener('input', update)
+      
+      var pasted = false
+      input.addEventListener('paste', function() {
+        pasted = true
+      });
+
+      optionsForm.addEventListener('change', function () {
+        update()
+      })
+
+      update()
+
+      function Lex(input) {
+        this.input = input
+        this.tokens = []
+        this.concat = function (a1, a2, a3) {
+          return Array.prototype.concat(a1, a2, a3).filter(function (val) { return val }) // filter NULL
+        }
+        this.toDate = function (dateString) {
+          let parts = dateString.split(/[\/-]/g)
+          let d = m = y = 0
+          if (parts.length === 3) {
+            d = parseInt(parts[0])
+            m = parseInt(parts[1]) - 1
+            y = parseInt(parts[2])
+          } else if (parts.length === 2) {
+            m = parseInt(parts[0]) - 1
+            y = parseInt(parts[1])
+            d = 1
+          } else {
+            throw new Error("Invalid date");
+          }
+          if (y < 100){
+            y += (y+2000 <= new Date().getFullYear()) ? 2000 : 1900
+          }
+          return new Date(y, m, d)
+        }
+
+        this.parseString = function (str, row, col) {
+          // if not an empty string
+          if (!str || !str.trim().length) {
+            return null
+          }
+          var match
+          match = datepattern.exec(str)
+          if (match) {
+            var dateString = match[0].replace(/(:$)/g,"")  //remove colons
+            var date = this.toDate(dateString)
+            date.display = (date.getMonth() + 1) + "/" + date.getFullYear().toString().substr(-2)
+            date.raw = match[0]
+            date.row = row
+            date.col = col+match.index
+            return this.concat(
+              this.parseString(str.substring(0, match.index), row, col),
+              { date: date },
+              this.parseString(str.substring(match[0].length + match.index), row, col + match[0].length + match.index))
+          }
+
+          // isolate Ix
+
+          for (var key in ixNames) {
+            for (var i = 0; i < ixNames[key].length; i++) {
+              match = new RegExp("\\b" + ixNames[key][i] + "\\b", 'i').exec(str)
+              if (match)
+                return this.concat(
+                  this.parseString(str.substring(0, match.index), row, col),
+                  { ix: { 
+                    test: ixNames[key][i], 
+                    type: key,
+                    row: row,
+                    col: col+match.index
+                  } },
+                  this.parseString(str.substring(match[0].length + match.index), row, col + match[0].length + match.index))
+            }
+          }
+
+          let opt = options()
+
+          // Remove common units
+          if (opt.units == "all") {
+            str = str.replace(/\(CKD-EPI\)/g, "")
+            str = str.replace(/(\[mg\/mmol\])/g, "")
+            str = str.replace(/(\[U\/L\])/g, "")
+            str = str.replace(/(\(mg\/mg\))/g, "")
+          }
+
+          str = str.replace(/(^[\s,:]+|[\s,:]+$)/g,"")  //remove starting, trailing signs
+
+          // replace common words
+          if (opt.rename == "all") {
+            str = str.replace(/ H$/g, "↑")
+            str = str.replace(/ L$/g, "↓")
+          }
+          return { text: str }
+        }
+
+        this.tokenize = function () {
+          const that = this
+          let inArray = this.input.split("\n").map(function(v,i){ return that.parseString(v, i, 0) }).filter(function(v){return v})
+          // combine those without date to previous line if available.
+          for (var i=0;i<inArray.length; i++){
+            var firstDate = null;
+            if (inArray[i].constructor === Array) 
+              firstDate = inArray[i].find(function(v){ return v.date })
+            if (!firstDate && i>0){
+              if (inArray[i-1].constructor !== Array)
+                inArray[i-1] = [inArray[i-1]]
+              inArray[i-1] = inArray[i-1].concat({text:"\n"},inArray[i])
+              inArray.splice(i,1)
+              i--
+            }
+          }
+          let outArray = []
+          let lastToken = {}  //stores the last used token
+
+          for (let i = 0; i < inArray.length; i++) {
+            let obj = inArray[i]
+            let outObj = {}
+            let unparsed = ""
+
+            if (!obj) continue;
+
+            if (obj.text) {
+              if (ix = lastToken.ix) { //finds last a/v Ix, append text
+                let lastIx = ix[ix.length - 1]
+                lastIx.text = strjoin(lastIx.text, "\n" + obj.text)
+              } else
+                outArray.push({ unparsed: obj.text })
+              continue
+            }
+
+            for (let j = 0; j < obj.length; j++) {
+              if (d = obj[j].date)
+                if (!outObj.date)
+                  outObj.date = d
+                else
+                  outObj.ix[outObj.ix.length - 1].text = strjoin(outObj.ix[outObj.ix.length - 1].text, " "+d.raw+" ") // second occurance of date, treat as unparsed text.
+              if (ix = obj[j].ix) {
+                if (!outObj.ix) outObj.ix = []
+                outObj.ix.push(ix)
+              }
+              if (t = obj[j].text)
+                if (!outObj.ix)
+                  unparsed += t + " "
+                else
+                  outObj.ix[outObj.ix.length - 1].text = strjoin(outObj.ix[outObj.ix.length - 1].text, t)
+            }
+
+            if (unparsed !== "") outObj.unparsed = unparsed
+
+            outArray.push(outObj)
+            lastToken = outObj
+          }
+          console.log(outArray)
+          this.tokens = outArray
+        }
+        this.sortByDate = function () {
+          this.tokens.sort(function (a, b) {
+            return (b.date - a.date)
+          })
+        }
+        this.getTokens = function () { return this.tokens }
+        this.getIxList = function () {
+          var cst = img = ecg = rest = unparsed = ''
+          for (var i = 0; i < this.tokens.length; i++) {
+            if (this.tokens[i].ix) {
+              var raw = "\n" + 
+                this.tokens[i].date.display + 
+                (this.tokens[i].unparsed? " " + this.tokens[i].unparsed  : "") +
+                this.tokens[i].ix.reduce(function(p, v){
+                  return p + " " + v.test + 
+                  (v.text? " " + v.text : "")
+                }, "")
+              switch (this.tokens[i].ix[0].type) {
+                case 'cst': cst += raw
+                  break
+                case 'img': img += raw
+                  break
+                case 'ecg': ecg += raw
+                  break
+                default: rest += raw
+              }
+            } else
+              unparsed += '\n' + strjoin(this.tokens[i].date? this.tokens[i].date.display+" ":null, this.tokens[i].unparsed)
+          }
+          return rest + "\n" + cst + "\n" + img + "\n" + ecg + "\n" + unparsed;
+        }
+        this.queryLastIx = function (lastIx) {
+          let found = this.tokens.find(function (token) {
+            return token.ix && token.ix.find(function (v) { return v.test == lastIx })
+          })
+          console.log(found)
+          if (found)
+            return found.date.display +" "+ found.ix.find(function (v) { return v.test == lastIx }).text
+        }
+      }
+
+      function update() {
+        // actual updating
+        let out = input.value
+        let opt = options()
+
+        // store Hx if pasted
+        if (pasted){
+          pasted = false
+          if (opt.rename == "all") {
+            out = out.replace(/\b(hba1c|a1c)\b/gi, "A1c")
+            out = out.replace(/\b(FBS)\b/g, "FG")
+          }
+          // Interpret normal results
+          if (opt.normalize == "all") {
+            out = out.replace(/(Ur Albumin below analytica ...)/g, "N") //TKO
+            out = out.replace(/(Ur Albumin or Ur Creatinin ...)/g, "N") //UCH
+          }
+          historyBox.value = out + "\n\n\n" + historyBox.value
+          input.value = out
+        }
+
+        let lex = new Lex(out)
+        lex.tokenize()
+
+        let result_element = document.querySelector("#highlight");
+        // Update code
+        var outputHTML = input.value
+        if(outputHTML[outputHTML.length-1] == "\n") { // If the last character is a newline character
+          outputHTML += " "; // Add a placeholder space character to the final line 
+        }
+        
+        result_element.innerHTML = toStyledHTML(outputHTML, lex.getTokens())
+        
+        // split
+        if (opt.reorder != "off") {
+          if (opt.reorder == "on-with-sort")
+            lex.sortByDate()
+          out = lex.getIxList(true)
+          jsonBox.innerHTML = ''
+          jsonBox.appendChild(renderjson(lex.getTokens()))
+          lastA1c.textContent = lex.queryLastIx('A1c')
+          lastLDL.textContent = lex.queryLastIx('LDL') || lex.queryLastIx('Lipid') || lex.queryLastIx('Chol')
+          lastEGFR.textContent = lex.queryLastIx('eGFR')
+        }
+
+        // Format
+        out = out.replace(/[^\S\r\n]{2,}/g, " ").trim() // trim white
+        out += "\n"
+        
+        output.value = out
+      }
+
+      function options() {
+        var opts = {}
+        var inputs = optionsForm.getElementsByTagName('select')
+        for (var i = 0; i < inputs.length; i++) {
+          var input = inputs[i]
+          opts[input.name] = input.value
+        }
+        return opts
+      }
+
+    })();
+
+    var textHistory = "";
+    
+    function copyHx() {
+      var h = document.getElementById("historyBox");
+      h.select();
+      h.setSelectionRange(0, 99999);
+      console.log(navigator.clipboard)
+      console.log(window.clipboardData)
+      if (clip = navigator.clipboard)
+        clip.writeText(h.value)
+      else if (clipData = window.clipboardData)
+        clipData.setData('text', h.value) // IE fallback
+      else
+        document.execCommand('copy') //last resort
+      var t = document.getElementById("myTooltip");
+      t.innerHTML = "Copied: " + h.value;
+    }
+
+    function resetTooltip() {
+      var t = document.getElementById("myTooltip");
+      t.innerHTML = "Copy to clipboard";
+    }
+
+    function scrollSync(target) {
+      let origin = document.querySelector("#highlight");
+      // Get and set x and y
+      origin.scrollTop = target.scrollTop;
+      origin.scrollLeft = target.scrollLeft;
+    }
+
+    function escapeHTML(text){
+      return text.replace(/&/g, "&amp;").replace(/</g, "&lt;")
+    }
+
+    function toStyledHTML(text, tokens) {
+      var datecolor = "brown"
+      var ixcolor = "royalblue"
+      var changelist = []; // [row,col,length,type]
+      for (var i = 0; i < tokens.length; i++) {
+        if (d = tokens[i].date)
+          changelist.push([d.row,d.col,d.raw.length,datecolor])
+        if (ix = tokens[i].ix)
+          for (var j=0; j < ix.length; j++)
+            changelist.push([ix[j].row,ix[j].col,ix[j].test.length,ixcolor])
+      }
+      changelist.sort(function(a,b){ return a[0] - b[0] || a[1] - b[1] })
+      var textArray = text.split("\n").map(function(t){ return [0, t, ""]}) // [cursor, original, processed]
+      for (var i = 0; i < changelist.length; i++){
+        var r = changelist[i][0]
+        var c = changelist[i][1] - textArray[r][0] // reset column number to cursor position on the original string
+        var n = changelist[i][2]
+        var color = changelist[i][3]
+        textArray[r][2] += escapeHTML(textArray[r][1].slice(0,c))
+        textArray[r][2] += "<span style=color:" + color + ">" + textArray[r][1].slice(c,c+n) + "</span>"
+        textArray[r][1] = textArray[r][1].slice(c+n)
+        textArray[r][0] += c+n
+      }
+      var html = ""
+      for (var i = 0; i < textArray.length; i++){
+        html += textArray[i][2] + escapeHTML(textArray[i][1])
+        if (i != textArray.length-1) html += "\n"
+      }
+      return html
+    }
+    
+    function strjoin(str1, str2){
+      if (str1 && str2) return str1+str2
+      if (str1 || str2) return str1||str2
+    }
+
+    function onQuit(){
+      return 'You are about to leave'
+    }
+
+  </script>
+</body>
+
+</html>

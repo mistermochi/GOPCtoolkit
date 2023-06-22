@@ -13,7 +13,6 @@ onmessage = function(e){
     {"name": "Rxs", "symbols": ["Rxs", "ln", "Rx"], "postprocess": function (d) { return d[0].concat(d[2]) }},
     {"name": "Rxs", "symbols": ["Rx"]},
     {"name": "Rx", "symbols": ["date", "t", "any", "t", "any", "t", "any", "t", "any", "ln", "Dgs"], "postprocess":  function (d) {
-      console.log("Px on ",d[0])
       return {
         	date:d[0],
         	hospital: d[2],

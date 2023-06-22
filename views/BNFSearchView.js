@@ -130,8 +130,8 @@ define([
                         for(let key in cache){
                             index.import(key, cache[key]);
                         }
-                        that.index = index
                         that.drugList = JSON.parse(drugList)
+                        that.index = index
 
                         // drugDB search
                         const UCHIndex = new FlexSearch.Index({
@@ -140,7 +140,6 @@ define([
                             preset: "score",
                             minlength: 3
                         })
-                        /**
                         for (let i in that.drugDB){
                             UCHIndex.add(i,that.drugDB[i][1])
                         }
@@ -150,7 +149,6 @@ define([
                                 console.log(that.drugDB[result])
                             })
                         }
-                        **/
                     })
                 })
             })
@@ -216,7 +214,10 @@ define([
         template:'\
         <div>\
             <div class="container">\
-                <input class="form-input" id="drugsearch" @input="search" placeholder="Search...">\
+                <div :class="index ? \'\' : \'has-icon-left\'">\
+                    <input class="form-input" id="drugsearch" @input="search" autofocus :disabled="!index" placeholder="Search...">\
+                    <i v-if="!index" class="form-icon loading"></i>\
+                </div>\
                 <ol>\
                     <li v-for="item in hits">\
                         <router-link :to="\'/BNF/drug/\'+item.id" class="btn btn-link">{{item.title}}</router-link>\
